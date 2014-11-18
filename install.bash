@@ -65,13 +65,13 @@ function setup_git() {
 }
 
 function symlink_files() {
-  ln -s ~/.dotfiles/vimrc ~/.vimrc
+  ln -sf ~/.dotfiles/vimrc ~/.vimrc
 
   if [[ $LOGIN_SHELL == 'bash' ]] ; then
-    ln -s ~/.dotfiles/bashrc ~/.bashrc
+    ln -sf ~/.dotfiles/bashrc ~/.bashrc
   elif [[ $LOGIN_SHELL == 'zsh' ]] ; then
-    ln -s ~/.dotfiles/zshrc ~/.zshrc
-    ln -s ~/.dotfiles/oh-my-zsh ~/.oh-my-zsh
+    ln -sf ~/.dotfiles/zshrc ~/.zshrc
+    ln -sf ~/.dotfiles/oh-my-zsh ~/.oh-my-zsh
   fi
 }
 
