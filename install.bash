@@ -53,12 +53,10 @@ function setup_vim() {
 
 function setup_git() {
   echo 'Setting up git config...'
-  read -p 'Enter username: ' GIT_USER
+  read -p 'Enter Github username: ' GIT_USER
   git config --global user.name "$GIT_USER"
   read -p 'Enter email: ' GIT_EMAIL
   git config --global user.email $GIT_EMAIL
-  read -p 'Enter Github account: ' GIT_EMAIL
-  git config --global github.user $GITHUB_USER
   git config --global core.editor vim
   git config --global color.ui true
   git config --global color.diff auto
