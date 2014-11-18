@@ -23,7 +23,7 @@ function os_type() {
 }
 
 function setup_bash() {
-
+  echo 'setup bash'
 }
 
 function setup_zsh() {
@@ -47,7 +47,7 @@ function determine_shell() {
 }
 
 function setup_vim() {
-  echo "Setting up vim..."
+  echo "Setting up vim...ignore any vim errors post install"
   vim +BundleInstall +qall
 }
 
@@ -67,22 +67,24 @@ function setup_git() {
 }
 
 function symlink_files() {
-  ln -s vimrc ~/.vimrc
-  ln -s zshrc ~/.zshrc
+  ln -s ~/.dotfiles/vimrc ~/.vimrc
+  ln -s ~/.dotfiles/zshrc ~/.zshrc
+  ln -s ~/.dotfiles/oh-my-zsh ~/.oh-my-zsh
 }
 
 set -e
 (
+  os_type
   # general package array
   declare -a packages=('vim' 'git' 'tree' 'htop' 'wget' 'curl')
 
   determine_shell
   if [[ $LOGIN_SHELL == 'bash' ]] ; then
     setup_bash
-    packages+='bash'
+    packages=(${packages[@]} 'bash')
   elif [[ $LOGIN_SHELL == 'zsh' ]] ; then
     setup_zsh
-    packages+='zsh'
+    packages=(${packages[@]} 'zsh')
   fi
 
   if [[ $OSPACKMAN == "homebrew" ]]; then
@@ -108,10 +110,11 @@ set -e
   fi
 
   setup_git
-  setup_vim
   symlink_files
+  setup_vim
 
   if [[ $LOGIN_SHELL == 'bash' ]] ; then
+    echo 'bash'
   elif [[ $LOGIN_SHELL == 'zsh' ]] ; then
     echo "Changing shells to ZSH"
     chsh -s /bin/zsh
