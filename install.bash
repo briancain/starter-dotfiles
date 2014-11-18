@@ -22,9 +22,9 @@ function os_type() {
   }
 }
 
-function setup_bash() {
-  echo 'setup bash'
-}
+# function setup_bash() {
+#   # TODO: Bash customization
+# }
 
 function setup_zsh() {
   echo 'Adding oh-my-zsh to dotfiles...'
@@ -66,8 +66,13 @@ function setup_git() {
 
 function symlink_files() {
   ln -s ~/.dotfiles/vimrc ~/.vimrc
-  ln -s ~/.dotfiles/zshrc ~/.zshrc
-  ln -s ~/.dotfiles/oh-my-zsh ~/.oh-my-zsh
+
+  if [[ $LOGIN_SHELL == 'bash' ]] ; then
+    ln -s ~/.dotfiles/bashrc ~/.bashrc
+  elif [[ $LOGIN_SHELL == 'zsh' ]] ; then
+    ln -s ~/.dotfiles/zshrc ~/.zshrc
+    ln -s ~/.dotfiles/oh-my-zsh ~/.oh-my-zsh
+  fi
 }
 
 set -e
@@ -78,7 +83,7 @@ set -e
 
   determine_shell
   if [[ $LOGIN_SHELL == 'bash' ]] ; then
-    setup_bash
+    # setup_bash
     packages=(${packages[@]} 'bash')
   elif [[ $LOGIN_SHELL == 'zsh' ]] ; then
     setup_zsh
@@ -112,7 +117,10 @@ set -e
   setup_vim
 
   if [[ $LOGIN_SHELL == 'bash' ]] ; then
-    echo 'bash'
+    echo "Operating System setup complete."
+    echo "Reloading session"
+
+    source ~/.bashrc
   elif [[ $LOGIN_SHELL == 'zsh' ]] ; then
     echo "Changing shells to ZSH"
     chsh -s /bin/zsh
