@@ -28,7 +28,17 @@ function os_type() {
 
 function setup_zsh() {
   echo 'Adding oh-my-zsh to dotfiles...'
-  git clone https://www.github.com/robbyrussell/oh-my-zsh.git
+  OMZDIR=~/.dotfiles/oh-my-zsh
+
+  if [ -d "$OMZDIR" ] ; then
+    echo 'Updating oh-my-zsh to latest version'
+    cd ~/.dotfiles/oh-my-zsh
+    git pull origin master
+    cd -
+  else
+    echo 'Adding oh-my-zsh to dotfiles...'
+    git clone https://www.github.com/robbyrussell/oh-my-zsh.git
+  fi
 }
 
 function determine_shell() {
@@ -65,14 +75,31 @@ function setup_git() {
 }
 
 function symlink_files() {
-  ln -sf ~/.dotfiles/vimrc ~/.vimrc
-
-  if [[ $LOGIN_SHELL == 'bash' ]] ; then
-    ln -sf ~/.dotfiles/bashrc ~/.bashrc
-  elif [[ $LOGIN_SHELL == 'zsh' ]] ; then
-    ln -sf ~/.dotfiles/zshrc ~/.zshrc
-    ln -sf ~/.dotfiles/oh-my-zsh ~/.oh-my-zsh
-  fi
+  for f in $(ls -d *); do
+    if [[ $f =~ 'LICENSE' ]]; then
+      echo "Skipping $f ..."
+    elif [[ $f =~ 'README.md' ]]; then
+      echo "Skipping $f ..."
+    elif [[ $f =~ 'install.bash' ]]; then
+      echo "Skipping $f ..."
+    elif [[ $f =~ 'update-zsh.sh' ]]; then
+      echo "Skipping $f ..."
+    elif [[ $f =~ 'bashrc' ]]; then
+      if [[ $LOGIN_SHELL == 'bash' ]] ; then
+        ln -sf "$PWD/$f" "$HOME/.$f";
+      fi
+    elif [[ $f =~ 'zshrc' || $f =~ 'oh-my-zsh' ]]; then
+      if [[ $LOGIN_SHELL == 'zsh' ]] ; then
+        ln -sf "$PWD/$f" "$HOME/.$f";
+      fi
+    elif [[ $f =~ 'oh-my-zsh' ]]; then
+      if [[ $LOGIN_SHELL == 'zsh' ]] ; then
+        ln -sf "$PWD/$f" "$HOME/.$f";
+      fi
+    else
+        ln -sf "$PWD/$f" "$HOME/.$f";
+    fi
+  done
 }
 
 set -e
@@ -83,10 +110,8 @@ set -e
 
   determine_shell
   if [[ $LOGIN_SHELL == 'bash' ]] ; then
-    # setup_bash
     packages=(${packages[@]} 'bash')
   elif [[ $LOGIN_SHELL == 'zsh' ]] ; then
-    setup_zsh
     packages=(${packages[@]} 'zsh')
   fi
 
@@ -110,6 +135,13 @@ set -e
   else
     echo "Could not determine OS. Exiting..."
     exit 1
+  fi
+
+  if [[ $LOGIN_SHELL == 'bash' ]] ; then
+    # setup_bash
+    echo 'No extra bash configs yet...'
+  elif [[ $LOGIN_SHELL == 'zsh' ]] ; then
+    setup_zsh
   fi
 
   setup_git
