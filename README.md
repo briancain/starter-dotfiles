@@ -6,7 +6,7 @@ Looking to start your own dotfiles? Feel free to fork this repo and customize aw
 
 Clone my dotfiles into a directory
 
-    $ git clone https://github.com/briancain/starter-dotfiles.git ~/.dotfiles
+    $ git clone https://github.com/briancain/starter-dotfiles ~/.dotfiles
 
 Then `cd .dotfiles` and run my simple install bash script
 
