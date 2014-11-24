@@ -86,20 +86,40 @@ function symlink_files() {
       echo "Skipping $f ..."
     elif [[ $f =~ 'bashrc' ]]; then
       if [[ $LOGIN_SHELL == 'bash' ]] ; then
-        ln -sf "$PWD/$f" "$HOME/.$f";
+        link_file $f
       fi
     elif [[ $f =~ 'zshrc' || $f =~ 'oh-my-zsh' ]]; then
       if [[ $LOGIN_SHELL == 'zsh' ]] ; then
-        ln -sf "$PWD/$f" "$HOME/.$f";
+        link_file $f
       fi
     elif [[ $f =~ 'oh-my-zsh' ]]; then
       if [[ $LOGIN_SHELL == 'zsh' ]] ; then
-        ln -sf "$PWD/$f" "$HOME/.$f";
+        link_file $f
       fi
     else
-        ln -sf "$PWD/$f" "$HOME/.$f";
+        link_file $f
     fi
   done
+}
+
+# symlink a file
+# arguments: filename
+function link_file(){
+  echo "linking ~/.$1"
+  if ! $(ln -s "$PWD/$1" "$HOME/.$1");  then
+    echo "Replace file '~/.$1'?"
+    read -p "[Y/n]?: " Q_REPLACE_FILE
+    if [[ $Q_REPLACE_FILE != 'n' ]]; then
+      replace_file $1
+    fi
+  fi
+}
+
+# replace file
+# arguments: filename
+function replace_file() {
+  echo "replacing ~/.$1"
+  ln -sf "$PWD/$1" "$HOME/.$1"
 }
 
 set -e
