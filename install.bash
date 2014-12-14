@@ -76,9 +76,8 @@ function setup_git() {
 
 # Adds a symbolic link to files in ~/.dotfiles
 # to your home directory.
-# arguments: ignored files array
 function symlink_files() {
-  ignoredfiles=$1
+  ignoredfiles=(LICENSE README.md install.bash update-zsh.sh)
 
   for f in $(ls -d *); do
     if [[ ${ignoredfiles[@]} =~ $f ]]; then
@@ -164,10 +163,7 @@ set -e
   fi
 
   setup_git
-
-  ignoredfiles=(LICENSE README.md install.bash update-zsh.sh)
-  symlink_files ignoredfiles
-
+  symlink_files
   setup_vim
 
   if [[ $LOGIN_SHELL == 'bash' ]] ; then
