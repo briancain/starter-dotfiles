@@ -90,6 +90,10 @@ function symlink_files() {
       if [[ $LOGIN_SHELL == 'bash' ]] ; then
         link_file $f
       fi
+    elif [[ $f =~ 'bash_logout' ]]; then
+      if [[ $LOGIN_SHELL == 'bash' ]] ; then
+        link_file $f
+      fi
     elif [[ $f =~ 'zshrc' || $f =~ 'oh-my-zsh' ]]; then
       if [[ $LOGIN_SHELL == 'zsh' ]] ; then
         link_file $f
